@@ -10,8 +10,10 @@ namespace TaskManager
         {
             //FIFO: remove first (oldest) element if process list is full
             if (ProcessListIsFull())
-            {
-                _processList.RemoveAt(0);
+            {              
+               _processList[0].Kill();
+
+               _processList.RemoveAt(0);
             }
 
             _processList.Add(processItem);
