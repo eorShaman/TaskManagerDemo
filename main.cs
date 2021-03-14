@@ -7,7 +7,8 @@ namespace TaskManager
         static void Main(string[] args)
         {
 
-            TaskManager taskManager;
+            string menuTitle;
+            TaskManager taskManager; 
 
             Console.WriteLine("1:Task manager");
             Console.WriteLine("2:Task manager FIFO");
@@ -20,17 +21,21 @@ namespace TaskManager
             {
                 case ConsoleKey.D2:
                     taskManager = new TaskManagerFIFO();
+                    menuTitle = "FIFO task manager";
                     break;
                 case ConsoleKey.D3:
                     taskManager = new TaskManagerPriority();
+                    menuTitle = "Priority task manager";
                     break;
                 default:
                     taskManager = new TaskManager();
+                    menuTitle = "Default task manager";
                     break;
             }
 
             do
             {
+                Console.WriteLine(menuTitle);
                 Console.WriteLine("1:Add process: Low priority");
                 Console.WriteLine("2:Add process: Medium priority");
                 Console.WriteLine("3:Add process: High priority");
