@@ -8,7 +8,7 @@ namespace TaskManager
         {
 
             string menuTitle;
-            TaskManager taskManager; 
+            TaskManager taskManager;
 
             Console.WriteLine("1:Task manager");
             Console.WriteLine("2:Task manager FIFO");
@@ -39,12 +39,13 @@ namespace TaskManager
                 Console.WriteLine("1:Add process: Low priority");
                 Console.WriteLine("2:Add process: Medium priority");
                 Console.WriteLine("3:Add process: High priority");
-                Console.WriteLine("4:List processes");
+                Console.WriteLine("4:List processes by ID");
                 Console.WriteLine("5:Kill all processes");
                 Console.WriteLine("6:Kill group: Low priority");
                 Console.WriteLine("7:Kill group: Medium priority");
                 Console.WriteLine("8:Kill group: High priority");
                 Console.WriteLine("9:Kill PID");
+                Console.WriteLine("0:List processes by priority");
                 Console.WriteLine("<ESC> Close");
                 key = Console.ReadKey(true);
                 Console.Clear();
@@ -52,13 +53,13 @@ namespace TaskManager
                 switch (key.Key)
                 {
                     case ConsoleKey.D1:
-                        taskManager.Add(ProcessPriority.Low);
+                        taskManager.Add(taskManager.CreateNewProcess(ProcessPriority.Low));
                         break;
                     case ConsoleKey.D2:
-                        taskManager.Add(ProcessPriority.Medium);
+                        taskManager.Add(taskManager.CreateNewProcess(ProcessPriority.Medium));
                         break;
                     case ConsoleKey.D3:
-                        taskManager.Add(ProcessPriority.High);
+                        taskManager.Add(taskManager.CreateNewProcess(ProcessPriority.High));
                         break;
                     case ConsoleKey.D4:
                         taskManager.List();
@@ -80,10 +81,13 @@ namespace TaskManager
                         Console.Write("Kill PID number?");
                         string line = Console.ReadLine();
                         int pid;
-                        if (Int32.TryParse(line,out pid))
+                        if (Int32.TryParse(line, out pid))
                         {
                             taskManager.Kill(pid);
                         }
+                        break;
+                    case ConsoleKey.D0:
+                        taskManager.List(ProcessListOrder.Priority);
                         break;
                     default:
                         break;

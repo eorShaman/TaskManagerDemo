@@ -6,7 +6,7 @@ namespace TaskManager
 {
     class TaskManagerFIFO : TaskManager
     {
-        public override bool Add(ProcessPriority processPriority)
+        public override bool Add(ProcessItem processItem)
         {
             //FIFO: remove first (oldest) element if process list is full
             if (ProcessListIsFull())
@@ -14,7 +14,9 @@ namespace TaskManager
                 _processList.RemoveAt(0);
             }
 
-            return AddNewProcess(processPriority);
+            _processList.Add(processItem);
+            
+            return true;
         }
     }
 }

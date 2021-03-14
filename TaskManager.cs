@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace TaskManager
 {
+    public enum ProcessListOrder { PID, Priority };
     class TaskManager
     {
         const int maxProcessesInList = 10;
@@ -12,7 +13,7 @@ namespace TaskManager
 
         protected int _lastPID = 0; //Starting PID numbering with 1
 
-        protected int getNextPIDNumber()
+        protected int GetNextPIDNumber()
         {
 
             _lastPID++;
@@ -78,13 +79,21 @@ namespace TaskManager
             {
                 Console.WriteLine("Processes with priority:{0} don't exists", processPriority.ToString());
             }
+
             return removedProcessCount;
         }
 
-        public void List()
+        public void List(ProcessListOrder processListOrder = ProcessListOrder.PID)
         {
+            List<ProcessItem> processList = _processList;
 
-            if (_processList.Count == 0)
+            if (processListOrder == ProcessListOrder.Priority) {
+
+                processList = _processList.OrderBy(o=>o.ProcessPriority).ToList();
+
+            }
+
+            if (processList.Count == 0)
             {
 
                 Console.WriteLine("Process list is empty");
@@ -92,9 +101,10 @@ namespace TaskManager
                 return;
             }
 
-            Console.WriteLine(String.Format("Process list [{0}]", _processList.Count));
+            Console.WriteLine(String.Format("Process list [{0}]", processList.Count));
 
-            foreach (ProcessItem processItem in _processList)
+
+            foreach (ProcessItem processItem in processList)
             {
 
                 processItem.WriteInfo();
@@ -111,7 +121,7 @@ namespace TaskManager
             return _processList.Count == maxProcessesInList;
         }
 
-        public virtual bool Add(ProcessPriority processPriority)
+        public virtual bool Add(ProcessItem processItem)
         {
 
             if (ProcessListIsFull())
@@ -121,27 +131,27 @@ namespace TaskManager
                 return false;
             }
 
-            return AddNewProcess(processPriority);
+            _processList.Add(processItem); 
+
+            return true;
 
         }
 
-        protected bool AddNewProcess(ProcessPriority processPriority)
+        public ProcessItem CreateNewProcess(ProcessPriority processPriority)
         {
             ProcessItem processItem;
 
-            int pid = getNextPIDNumber();
+            int pid = GetNextPIDNumber();
 
             processItem = new ProcessItem(pid, processPriority);
 
-            _processList.Add(processItem); //Add to the end of list
-
-            Console.WriteLine(String.Format("Added process PID:{0,3} with priority:{1,-6} created:{2} ms:{3}",
+            Console.WriteLine(String.Format("Created process PID:{0,3} with priority:{1,-6} created:{2} ms:{3}",
                 processItem.PID,
                 processItem.ProcessPriority.ToString(),
                 processItem.CreationTime,
                 processItem.CreationTime.ToString("ffff")));
 
-            return true;
+            return processItem;
         }
     }
 }

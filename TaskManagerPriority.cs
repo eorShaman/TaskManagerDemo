@@ -4,11 +4,11 @@ namespace TaskManager
 {
     class TaskManagerPriority : TaskManager
     {
-        public override bool Add(ProcessPriority processPriority)
+        public override bool Add(ProcessItem processItem)
         {
             int foundProcessAtIndex = -1;
 
-            ProcessPriority currentProcessPriority = processPriority;
+            ProcessPriority currentProcessPriority = processItem.ProcessPriority;
 
             //Priority: if exists, remove oldest process that has lower priority when the process list is full
             if (ProcessListIsFull())
@@ -24,7 +24,7 @@ namespace TaskManager
                 }
                 //if currentProcessPriority is not lower than processPriority of the new process
                 //we didnt find the process with lower priority
-                if (currentProcessPriority == processPriority)
+                if (currentProcessPriority == processItem.ProcessPriority)
                 {
                     Console.WriteLine("Can't add process. Process list is full");
                     return false;
@@ -35,7 +35,9 @@ namespace TaskManager
                 _processList.RemoveAt(foundProcessAtIndex);
             }
 
-            return AddNewProcess(processPriority);
+            _processList.Add(processItem);
+
+            return true;
         }
     }
 }
